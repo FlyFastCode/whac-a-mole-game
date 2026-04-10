@@ -148,49 +148,87 @@ body {
   background: #654321;
   border-radius: 50%;
   position: relative;
-  cursor: pointer;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'><text y='20' font-size='20'>🔨</text></svg>") 16 16, auto;
   box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.6);
   transition: all 0.1s ease;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .mole-hole:active {
   transform: scale(0.95);
 }
 
-/* 地鼠 */
-.mole {
-  width: 100%;
-  height: 100%;
+.mole-hole:active::after {
+  content: '💥';
   position: absolute;
-  top: 100%;
-  left: 0;
-  transition: top 0.15s ease-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 3rem;
-  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  animation: hit-effect 0.3s ease-out;
+  z-index: 50;
 }
 
-/* 地鼠弹出状态 */
+@keyframes hit-effect {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 地鼠洞土壤效果 */
+.mole-hole::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(to top, #4a3520 0%, transparent 100%);
+  border-radius: 0 0 50% 50%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* 地鼠 */
+.mole {
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  bottom: -100%;
+  left: 10%;
+  transition: bottom 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 3rem;
+  border-radius: 50% 50% 0 0;
+  z-index: 5;
+}
+
+/* 地鼠弹出状态 - 从地下冒出来 */
 .mole-hole.active .mole {
-  top: 10%;
+  bottom: 0;
 }
 
 /* 普通地鼠 */
-.mole:not(.golden)::after {
+.mole::after {
   content: '🐹';
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* 金色地鼠 */
 .mole.golden {
   background: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 -5px 20px rgba(255, 215, 0, 0.6);
 }
 
 .mole.golden::after {
   content: '🌟';
+}
+
+/* 地鼠被击中效果 */
+.mole-hole.active:active .mole {
+  transform: scale(0.9);
 }
 
 /* 游戏控制 */
@@ -253,6 +291,20 @@ body {
   .game-screen {
     padding: 20px;
   }
+  
+  .mole-grid {
+    gap: 10px;
+    padding: 15px;
+  }
+}
+
+/* 自定义锤子鼠标（全局） */
+.game-screen {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'><text y='20' font-size='20'>🔨</text></svg>") 16 16, auto;
+}
+
+.game-screen .btn {
+  cursor: pointer;
 }
 
 /* 暂停遮罩 */

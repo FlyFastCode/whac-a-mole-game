@@ -32,11 +32,11 @@ interface LevelConfig {
  * 关卡配置数据
  */
 const LEVELS: LevelConfig[] = [
-  { level: 1, targetScore: 50, duration: 60, moleSpeed: 1500, moleCount: 1 },
-  { level: 2, targetScore: 100, duration: 60, moleSpeed: 1200, moleCount: 2 },
-  { level: 3, targetScore: 180, duration: 60, moleSpeed: 900, moleCount: 2 },
-  { level: 4, targetScore: 280, duration: 60, moleSpeed: 700, moleCount: 3 },
-  { level: 5, targetScore: 400, duration: 60, moleSpeed: 500, moleCount: 3 },
+  { level: 1, targetScore: 30, duration: 60, moleSpeed: 2000, moleCount: 1 },
+  { level: 2, targetScore: 60, duration: 60, moleSpeed: 1700, moleCount: 1 },
+  { level: 3, targetScore: 100, duration: 60, moleSpeed: 1400, moleCount: 2 },
+  { level: 4, targetScore: 150, duration: 60, moleSpeed: 1100, moleCount: 2 },
+  { level: 5, targetScore: 220, duration: 60, moleSpeed: 800, moleCount: 3 },
 ]
 
 /**

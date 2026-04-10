@@ -260,16 +260,32 @@ body {
   position: relative;
 }
 
-.game-screen.paused::after {
-  content: '⏸️ 已暂停';
+.pause-overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  z-index: 100;
+}
+
+.pause-content {
+  text-align: center;
   color: white;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px 40px;
-  border-radius: 10px;
-  z-index: 10;
+  padding: 40px;
+}
+
+.pause-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.pause-content h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
 }

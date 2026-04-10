@@ -13,6 +13,7 @@ enum GameState {
   START = 'start',
   PLAYING = 'playing',
   PAUSED = 'paused',
+  LEVEL_COMPLETE = 'level_complete',
   RESULT = 'result'
 }
 
@@ -156,6 +157,7 @@ function App() {
   const [isGoldenMole, setIsGoldenMole] = useState<boolean>(false)
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true)
   const [gameResult, setGameResult] = useState<{ win: boolean; finalScore: number } | null>(null)
+  const [completedLevel, setCompletedLevel] = useState<number>(0)
 
   const config = LEVELS[currentLevel] || LEVELS[LEVELS.length - 1]
 
@@ -209,10 +211,31 @@ function App() {
   const togglePause = useCallback(() => {
     if (gameState === GameState.PLAYING) {
       setGameState(GameState.PAUSED)
+      setActiveMole(null) // 隐藏地鼠
     } else if (gameState === GameState.PAUSED) {
       setGameState(GameState.PLAYING)
     }
   }, [gameState])
+
+  /**
+   * 继续下一关
+   */
+  const nextLevel = useCallback(() => {
+    setCurrentLevel(completedLevel + 1)
+    setScore(0)
+    setTimeLeft(LEVELS[completedLevel + 1].duration)
+    setGameState(GameState.PLAYING)
+    soundController.playLevelUp()
+  }, [completedLevel])
+
+  /**
+   * 重新开始当前关
+   */
+  const retryLevel = useCallback(() => {
+    setScore(0)
+    setTimeLeft(LEVELS[currentLevel].duration)
+    setGameState(GameState.PLAYING)
+  }, [currentLevel])
 
   /**
    * 切换音效
@@ -230,13 +253,10 @@ function App() {
 
     if (score >= config.targetScore) {
       if (currentLevel < LEVELS.length - 1) {
-        // 进入下一关
-        setTimeout(() => {
-          setCurrentLevel(prev => prev + 1)
-          setScore(0)
-          setTimeLeft(LEVELS[currentLevel + 1].duration)
-          soundController.playLevelUp()
-        }, 1000)
+        // 进入下一关前显示确认
+        setCompletedLevel(currentLevel)
+        setGameState(GameState.LEVEL_COMPLETE)
+        soundController.playLevelUp()
       } else {
         // 游戏胜利
         setTimeout(() => {
@@ -317,7 +337,7 @@ function App() {
    * 渲染游戏界面
    */
   const renderGameScreen = () => (
-    <div className="game-screen">
+    <div className={`game-screen ${gameState === GameState.PAUSED ? 'paused' : ''}`}>
       <div className="game-header">
         <div className="stat">
           <span className="stat-label">关卡</span>
@@ -342,7 +362,7 @@ function App() {
             className={`mole-hole ${activeMole === index ? 'active' : ''}`}
             onClick={() => handleMoleClick(index)}
           >
-            {activeMole === index && (
+            {activeMole === index && gameState === GameState.PLAYING && (
               <div className={`mole ${isGoldenMole ? 'golden' : ''}`} />
             )}
           </div>
@@ -355,6 +375,38 @@ function App() {
         </button>
         <button className="btn btn-sound" onClick={toggleSound}>
           {soundEnabled ? '🔊' : '🔇'}
+        </button>
+      </div>
+
+      {gameState === GameState.PAUSED && (
+        <div className="pause-overlay">
+          <div className="pause-content">
+            <div className="pause-icon">⏸️</div>
+            <h2>游戏暂停</h2>
+            <button className="btn btn-primary" onClick={togglePause}>
+              ▶️ 继续游戏
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
+  /**
+   * 渲染关卡完成界面
+   */
+  const renderLevelCompleteScreen = () => (
+    <div className="result-screen">
+      <div className="result-icon">🎉</div>
+      <h2>关卡完成！</h2>
+      <p className="result-score">第 {completedLevel + 1} 关已完成</p>
+      <p className="result-score">得分：{score}</p>
+      <div className="result-buttons">
+        <button className="btn btn-primary" onClick={nextLevel}>
+          🚀 继续下一关
+        </button>
+        <button className="btn btn-secondary" onClick={retryLevel}>
+          🔄 重新挑战
         </button>
       </div>
     </div>
@@ -370,6 +422,9 @@ function App() {
       </div>
       <h2>{gameResult?.win ? '恭喜通关！' : '游戏结束'}</h2>
       <p className="result-score">最终分数：{gameResult?.finalScore}</p>
+      {gameResult?.win && (
+        <p className="result-score">通关所有 {LEVELS.length} 个关卡！</p>
+      )}
       <div className="result-buttons">
         <button className="btn btn-primary" onClick={startGame}>
           🔄 重新开始
@@ -385,6 +440,7 @@ function App() {
     <div className="app">
       {gameState === GameState.START && renderStartScreen()}
       {(gameState === GameState.PLAYING || gameState === GameState.PAUSED) && renderGameScreen()}
+      {gameState === GameState.LEVEL_COMPLETE && renderLevelCompleteScreen()}
       {gameState === GameState.RESULT && renderResultScreen()}
     </div>
   )

@@ -342,7 +342,9 @@ function App() {
             className={`mole-hole ${activeMole === index ? 'active' : ''}`}
             onClick={() => handleMoleClick(index)}
           >
-            <div className={`mole ${isGoldenMole ? 'golden' : ''}`} />
+            {activeMole === index && (
+              <div className={`mole ${isGoldenMole ? 'golden' : ''}`} />
+            )}
           </div>
         ))}
       </div>

@@ -15,7 +15,7 @@ body {
 
 .app {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   padding: 20px;
 }
 
@@ -23,7 +23,7 @@ body {
 .start-screen {
   text-align: center;
   background: white;
-  padding: 40px;
+  padding: 50px 40px;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
@@ -87,34 +87,38 @@ body {
 /* 游戏界面 */
 .game-screen {
   background: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .game-header {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-bottom: 25px;
+  padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
+  border-radius: 15px;
   color: white;
 }
 
 .stat {
   text-align: center;
+  min-width: 80px;
 }
 
 .stat-label {
   display: block;
   font-size: 0.9rem;
   opacity: 0.9;
+  margin-bottom: 5px;
 }
 
 .stat-value {
   display: block;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -133,54 +137,60 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  background: #8b5a2b;
+  padding: 20px;
+  border-radius: 15px;
 }
 
 .mole-hole {
   aspect-ratio: 1;
-  background: #8b4513;
+  background: #654321;
   border-radius: 50%;
   position: relative;
-  overflow: hidden;
   cursor: pointer;
-  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.6);
   transition: all 0.1s ease;
+  overflow: visible;
 }
 
 .mole-hole:active {
   transform: scale(0.95);
 }
 
-.mole-hole.active .mole {
-  bottom: 10%;
-}
-
+/* 地鼠 */
 .mole {
-  width: 80%;
-  height: 80%;
-  background: #d2691e;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  bottom: -100%;
-  left: 10%;
-  transition: bottom 0.2s ease-out;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  top: 100%;
+  left: 0;
+  transition: top 0.15s ease-out;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5rem;
+  font-size: 3rem;
+  border-radius: 50%;
 }
 
-.mole::after {
+/* 地鼠弹出状态 */
+.mole-hole.active .mole {
+  top: 10%;
+}
+
+/* 普通地鼠 */
+.mole:not(.golden)::after {
   content: '🐹';
 }
 
-.mole-hole.active .mole.golden::after {
-  content: '🌟';
-}
-
+/* 金色地鼠 */
 .mole.golden {
   background: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.mole.golden::after {
+  content: '🌟';
 }
 
 /* 游戏控制 */
@@ -194,7 +204,7 @@ body {
 .result-screen {
   text-align: center;
   background: white;
-  padding: 40px;
+  padding: 50px 40px;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
@@ -225,19 +235,23 @@ body {
 /* 响应式设计 */
 @media (max-width: 480px) {
   .app {
-    padding: 10px;
+    padding: 15px;
   }
 
   .start-screen h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
-  .mole::before {
-    font-size: 2rem;
+  .mole {
+    font-size: 2.5rem;
   }
 
   .stat-value {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+  }
+
+  .game-screen {
+    padding: 20px;
   }
 }
 
@@ -257,4 +271,5 @@ body {
   background: rgba(0, 0, 0, 0.7);
   padding: 20px 40px;
   border-radius: 10px;
+  z-index: 10;
 }

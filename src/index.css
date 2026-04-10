@@ -1,64 +1,261 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#root {
+.app {
   width: 100%;
-  margin: 0 auto;
+  max-width: 500px;
+  padding: 20px;
+}
+
+/* 启动界面 */
+.start-screen {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.start-screen h1 {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.start-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-pause {
+  background: #ffc107;
+  color: #333;
+}
+
+.btn-sound {
+  background: #f0f0f0;
+  color: #333;
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+/* 游戏界面 */
+.game-screen {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.stat {
   text-align: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.9;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.stat-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.stat-value.warning {
+  color: #ffeb3b;
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 地鼠网格 */
+.mole-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.mole-hole {
+  aspect-ratio: 1;
+  background: #8b4513;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.25s;
+  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.1s ease;
 }
 
-button:hover {
-  border-color: #646cff;
+.mole-hole:active {
+  transform: scale(0.95);
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.mole-hole.active .mole {
+  transform: translateY(0);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.mole {
+  width: 80%;
+  height: 80%;
+  background: #d2691e;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -100%;
+  left: 10%;
+  transition: transform 0.2s ease-out;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.mole::before {
+  content: '🐹';
+  font-size: 2.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mole.golden::before {
+  content: '🌟';
+}
+
+.mole.golden {
+  background: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
+}
+
+/* 游戏控制 */
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* 结果界面 */
+.result-screen {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.result-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.result-screen h2 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.result-score {
+  font-size: 1.5rem;
+  color: #667eea;
+  margin-bottom: 30px;
+}
+
+.result-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .app {
+    padding: 10px;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .start-screen h1 {
+    font-size: 2rem;
   }
+
+  .mole::before {
+    font-size: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
+  }
+}
+
+/* 暂停遮罩 */
+.game-screen.paused {
+  position: relative;
+}
+
+.game-screen.paused::after {
+  content: '⏸️ 已暂停';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px 40px;
+  border-radius: 10px;
 }

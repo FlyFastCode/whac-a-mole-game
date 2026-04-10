@@ -158,6 +158,7 @@ function App() {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true)
   const [gameResult, setGameResult] = useState<{ win: boolean; finalScore: number } | null>(null)
   const [completedLevel, setCompletedLevel] = useState<number>(0)
+  const [hitPosition, setHitPosition] = useState<number | null>(null)
 
   const config = LEVELS[currentLevel] || LEVELS[LEVELS.length - 1]
 
@@ -189,8 +190,14 @@ function App() {
 
     const points = isGoldenMole ? 20 : 10
     setScore(prev => prev + points)
+    setHitPosition(position)
     soundController.playHit()
-    setActiveMole(null)
+    
+    // 显示打击效果后隐藏
+    setTimeout(() => {
+      setHitPosition(null)
+      setActiveMole(null)
+    }, 150)
   }, [activeMole, gameState, isGoldenMole])
 
   /**
@@ -359,7 +366,7 @@ function App() {
         {Array.from({ length: 9 }).map((_, index) => (
           <div
             key={index}
-            className={`mole-hole ${activeMole === index ? 'active' : ''}`}
+            className={`mole-hole ${activeMole === index ? 'active' : ''} ${hitPosition === index ? 'hit' : ''}`}
             onClick={() => handleMoleClick(index)}
           >
             {activeMole === index && gameState === GameState.PLAYING && (
